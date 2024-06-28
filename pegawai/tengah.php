@@ -35,26 +35,8 @@ echo"
           <li class='list-group-item'>
             <b>Status Pegawai</b> <a class='pull-right'>$t[status_pegawai]</a>
           </li>
-        </ul>";
-  // Melakukan kueri SQL untuk memeriksa apakah pegawai tersebut sudah absen hari ini
-  $id_pegawai = $_SESSION['id_pegawai'];
-// Melakukan kueri SQL untuk memeriksa apakah pegawai tersebut sudah absen pulang hari ini
-$sqlxx = mysqli_query($koneksi, "SELECT * FROM presensi_pulang WHERE id_pegawai=$id_pegawai AND status_absensi_pulang='pulang' AND tanggal_absensi_pulang=CURDATE()");
-$txx = mysqli_fetch_array($sqlxx);
-// Melakukan kueri SQL untuk memeriksa apakah pegawai tersebut sudah absen datang hari ini
-$sqltx = mysqli_query($koneksi, "SELECT * FROM presensi_datang WHERE id_pegawai=$id_pegawai AND status_absensi_datang='datang' AND tanggal_absensi_datang=CURDATE()");
-$tpx = mysqli_fetch_array($sqltx);
-if ($tpx) {
-    if ($txx) {
-        echo "<a href='#' class='btn btn-success btn-block'><b>Sudah Absen</b></a>";
-    } else {
-        echo "<a href='absenpulang.php' class='btn btn-primary btn-block'><b>ABSEN PULANG</b></a>";
-    }
-} else {
-echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></a>";
-} 
-
-      echo"</div><!-- /.box-body -->
+        </ul>
+    <a href='absendatang.php' class='btn btn-primary btn-block'><b>Cetak CV</b></a></div><!-- /.box-body -->
     </div><!-- /.box -->
 
     <!-- About Me Box -->
@@ -93,43 +75,41 @@ echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></
   <div class='col-md-9'>
     <div class='nav-tabs-custom'>
       <ul class='nav nav-tabs'>
-        <li class='active'><a href='#activity' data-toggle='tab'>Riwayat</a></li>
-        <li><a href='#timeline' data-toggle='tab'>Penghargaan</a></li>
+        <li class='active'><a href='#activity' data-toggle='tab'>repository</a></li>
         <li><a href='#settings' data-toggle='tab'>Dokumen</a></li>
-        <li><a href='#keluarga' data-toggle='tab'>Keluarga</a></li>
       </ul>
       <div class='tab-content'>
 
         <div class='active tab-pane' id='activity'>
         <div class='box-header with-border'>
-        <h3 class='box-title'>Pendidikan</h3>
+        <h3 class='box-title'>repository</h3>
       </div><!-- /.box-header -->
         <button class='btn btn-info' data-toggle='modal' data-target='#uiModal'>
         Tambah Data
     </button><br><br>
-                        <table  class='table table-bordered table-striped'>
+                        <table id='example2' class='table table-bordered table-striped'>
                         <thead>
                             <tr>
                             <th>No</th>
-                                <th>Keterangan</th>
+                                <th>judul</th>
                                 <th>aksi</th>		  
                         </tr></thead>
                 <tbody>
                 ";
 
                 $no=0;
-                $tebaru1=mysqli_query($koneksi," SELECT * FROM riwayat WHERE jenis_riwayat='pendidikan' and id_pegawai='$_SESSION[id_pegawai]'");
+                $tebaru1=mysqli_query($koneksi," SELECT * FROM repo WHERE  id_pegawai='$_SESSION[id_pegawai]'");
                 while ($x=mysqli_fetch_array($tebaru1)){	
                 $no++;
                         echo"<tr>
                             <td>$no</td>
-                                <td>$x[ket_riwayat]</td>
-                <td><button class='btn btn-info' data-toggle='modal' data-target='#uiModal$x[id_riwayat]'><i class='fa fa-pencil'></i>lihat</button>
-                <a class='btn btn-info' href='hapus.php?aksi=hapusriwayat&id_riwayat=$x[id_riwayat]' onclick=\"return confirm ('Apakah yakin ingin menghapus $x[ket_riwayat] ?')\" title='Hapus'><i class='fa fa-remove'></i>hapus</a>
+                                <td>$x[judul]</td>
+                <td><button class='btn btn-info' data-toggle='modal' data-target='#uiModal$x[id_repo]'><i class='fa fa-pencil'></i>lihat</button>
+                <a class='btn btn-info' href='hapus.php?aksi=hapusriwayat&id_repo=$x[id_repo]' onclick=\"return confirm ('Apakah yakin ingin menghapus $x[ket_riwayat] ?')\" title='Hapus'><i class='fa fa-remove'></i>hapus</a>
                 </td>
                             </tr>
                             
-                            <div class='modal fade' id='uiModal$x[id_riwayat]' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+                            <div class='modal fade' id='uiModal$x[id_repo]' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
                             <div class='modal-dialog'>
                                 <div class='modal-content'>
                                     <div class='modal-header'>
@@ -137,7 +117,7 @@ echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></
                                         <h4 class='modal-title' id='H3'>Input Data </h4>
                                     </div>
                                     <div class='modal-body'>
-                                    <form role='form' method='post' action='edit.php?aksi=proseseditriwayat&id_riwayat=$x[id_riwayat]'>
+                                    <form role='form' method='post' action='edit.php?aksi=proseseditrepo&id_repo=$x[id_repo]'>
                                         <div class='form-group'>
                                         <label>Keterangan</label>
                                         <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'>$x[ket_riwayat] </textarea><br>
@@ -155,6 +135,7 @@ echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></
                 }
                     echo"  </tbody>
                     </table>
+
                     <div class='modal fade' id='uiModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
 <div class='modal-dialog'>
     <div class='modal-content'>
@@ -163,12 +144,27 @@ echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></
             <h4 class='modal-title' id='H3'>Input Data </h4>
         </div>
         <div class='modal-body'>
-       <form role='form' method='post' action='input.php?aksi=inputriwayat'>
+       <form role='form' method='post' action='input.php?aksi=inputrepo'>
                                 <div class='form-group'>
-            <label>Keterangan</label>
-            <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'></textarea><br>
-            <input type='hidden' class='form-control'  value='pendidikan' name='jenis_riwayat'/><br>
-            <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
+                                <label>Prodi</label>
+                                <select class='form-control select2' style='width: 100%;' name=id_prodi>";
+                                $xt=mysqli_query($koneksi," SELECT * FROM prodi ");
+                                while ($row=mysqli_fetch_array($xt)){
+                                    echo"<option value='$row[id_prodi]'>$row[nama_prodi]</option>";
+                                }
+                                echo"</select><br>
+                                <label>Tipe repository</label>
+                                <select class='form-control select2' style='width: 100%;' name=id_tipe>";
+                                $xr=mysqli_query($koneksi," SELECT * FROM tipe_repo ");
+                                while ($roww=mysqli_fetch_array($xr)){
+                                    echo"<option value='$roww[id_tipe]'>$roww[nama_tipe]</option>";
+                                }
+                                echo"</select><br>
+                                <label>Judul</label>
+                                <textarea id='text-ckeditor' class='form-control' name='judul'></textarea><br>
+                                <label>deskripsi</label>
+                                <textarea id='text-ckeditor' class='form-control' name='deskripsi'></textarea><br>
+                                <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
 
                                 <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
                                 <button type='submit' class='btn btn-primary'>Save </button>
@@ -180,167 +176,11 @@ echo "<a href='absendatang.php' class='btn btn-primary btn-block'><b>ABSEN</b></
 
         </div>   
 
-        <div class='box-header with-border'>
-        <h3 class='box-title'>Pekerjaan</h3>
-      </div><!-- /.box-header -->
-        <button class='btn btn-info' data-toggle='modal' data-target='#uiModalj'>
-        Tambah Data
-    </button><br><br>
-                        <table  class='table table-bordered table-striped'>
-                        <thead>
-                            <tr>
-                            <th>No</th>
-                                <th>Keterangan</th>
-                                <th>aksi</th>		  
-                        </tr></thead>
-                <tbody>
-                ";
-
-                $no=0;
-                $tebaru2=mysqli_query($koneksi," SELECT * FROM riwayat WHERE jenis_riwayat='pekerjaan' and id_pegawai='$_SESSION[id_pegawai]'");
-                while ($j=mysqli_fetch_array($tebaru2)){	
-                $no++;
-                        echo"<tr>
-                            <td>$no</td>
-                                <td>$j[ket_riwayat]</td>
-                <td><button class='btn btn-info' data-toggle='modal' data-target='#uiModalj$j[id_riwayat]'><i class='fa fa-pencil'></i>lihat</button>
-                <a class='btn btn-info' href='hapus.php?aksi=hapusriwayat&id_riwayat=$j[id_riwayat]' onclick=\"return confirm ('Apakah yakin ingin menghapus $j[ket_riwayat] ?')\" title='Hapus'><i class='fa fa-remove'></i>hapus</a>
-                </td>
-                            </tr>
-                            
-                            <div class='modal fade' id='uiModalj$j[id_riwayat]' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-                            <div class='modal-dialog'>
-                                <div class='modal-content'>
-                                    <div class='modal-header'>
-                                        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                                        <h4 class='modal-title' id='H3'>Input Data </h4>
-                                    </div>
-                                    <div class='modal-body'>
-                                    <form role='form' method='post' action='edit.php?aksi=proseseditriwayat&id_riwayat=$j[id_riwayat]'>
-                                        <div class='form-group'>
-                                        <label>Keterangan</label>
-                                        <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'>$j[ket_riwayat] </textarea><br>
-                                        <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-                                        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                                        <button type='submit' class='btn btn-primary'>Save </button>
-                                    </div>
-                </form>
-                                </div>
-                            </div>
-                        </div>
-                </div>          
-                            
-                            ";
-                }
-                    echo"  </tbody>
-                    </table>
-                    <div class='modal fade' id='uiModalj' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-<div class='modal-dialog'>
-    <div class='modal-content'>
-        <div class='modal-header'>
-            <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-            <h4 class='modal-title' id='H3'>Input Data </h4>
-        </div>
-        <div class='modal-body'>
-       <form role='form' method='post' action='input.php?aksi=inputriwayat'>
-                                <div class='form-group'>
-            <label>Keterangan</label>
-            <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'></textarea><br>
-            <input type='hidden' class='form-control'  value='pekerjaan' name='jenis_riwayat'/><br>
-            <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-
-                                <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                                <button type='submit' class='btn btn-primary'>Save </button>
-                            </div>
-        </form>
-    </div>
-</div>
-</div>
-
-        </div>   
+        
 
         </div><!-- /.tab-pane -->
 
-        <div class='tab-pane' id='timeline'>
-        <div class='box-header with-border'>
-        <h3 class='box-title'>Penghargaan</h3>
-      </div><!-- /.box-header -->
-        <button class='btn btn-info' data-toggle='modal' data-target='#uiModalpenghargaan'>
-        Tambah Data
-    </button><br><br>
-                        <table  class='table table-bordered table-striped'>
-                        <thead>
-                            <tr>
-                            <th>No</th>
-                                <th>Keterangan</th>
-                                <th>aksi</th>		  
-                        </tr></thead>
-                <tbody>
-                ";
-
-                $no=0;
-                $sql=mysqli_query($koneksi," SELECT * FROM riwayat WHERE jenis_riwayat='penghargaan' and id_pegawai='$_SESSION[id_pegawai]'");
-                while ($s=mysqli_fetch_array($sql)){	
-                $no++;
-                        echo"<tr>
-                            <td>$no</td>
-                                <td>$s[ket_riwayat]</td>
-                <td><button class='btn btn-info' data-toggle='modal' data-target='#uiModalpenghargaan$s[id_riwayat]'><i class='fa fa-pencil'></i>lihat</button>
-                <a class='btn btn-info' href='hapus.php?aksi=hapusriwayat&id_riwayat=$s[id_riwayat]' onclick=\"return confirm ('Apakah yakin ingin menghapus $x[ket_riwayat] ?')\" title='Hapus'><i class='fa fa-remove'></i>hapus</a>
-                </td>
-                            </tr>
-                            
-                            <div class='modal fade' id='uiModalpenghargaan$s[id_riwayat]' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-                            <div class='modal-dialog'>
-                                <div class='modal-content'>
-                                    <div class='modal-header'>
-                                        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-                                        <h4 class='modal-title' id='H3'>Input Data </h4>
-                                    </div>
-                                    <div class='modal-body'>
-                                    <form role='form' method='post' action='edit.php?aksi=proseseditriwayat&id_riwayat=$s[id_riwayat]'>
-                                        <div class='form-group'>
-                                        <label>Keterangan</label>
-                                        <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'>$s[ket_riwayat] </textarea><br>
-                                        <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-                                        <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                                        <button type='submit' class='btn btn-primary'>Save </button>
-                                    </div>
-                </form>
-                                </div>
-                            </div>
-                        </div>
-                </div>          
-                            
-                            ";
-                }
-                    echo"  </tbody>
-                    </table>
-                    <div class='modal fade' id='uiModalpenghargaan' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-<div class='modal-dialog'>
-    <div class='modal-content'>
-        <div class='modal-header'>
-            <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
-            <h4 class='modal-title' id='H3'>Input Data </h4>
-        </div>
-        <div class='modal-body'>
-       <form role='form' method='post' action='input.php?aksi=inputriwayat'>
-                                <div class='form-group'>
-            <label>Keterangan</label>
-            <textarea id='text-ckeditor' class='form-control' name='ket_riwayat'></textarea><br>
-            <input type='hidden' class='form-control'  value='penghargaan' name='jenis_riwayat'/><br>
-            <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-
-                                <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                                <button type='submit' class='btn btn-primary'>Save </button>
-                            </div>
-        </form>
-    </div>
-</div>
-</div>
-
-        </div> 
-        </div><!-- /.tab-pane -->
+        
 
         <div class='tab-pane' id='settings'>
         <button class='btn btn-info' data-toggle='modal' data-target='#uiModalupload'><i class='fa fa-cloud-upload'></i>Tambah Data</button>
@@ -405,97 +245,7 @@ $no++;
     </div>
 </div>
         </div><!-- /.tab-pane -->
-        <div class='tab-pane' id='keluarga'>
-        <button class='btn btn-info' data-toggle='modal' data-target='#uiModalkeluarga'><i class='fa fa-cloud-upload'></i>Tambah Data</button>
-        <table id='example1' class='table table-bordered table-striped'>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>nama</th>
-                <th>Hubungan</th>		
-                <th>hp</th>  
-                <th>aksi</th>  
-            </tr>
-        </thead>
-";
-
-$no=0;
-$keluarga=mysqli_query($koneksi," SELECT * FROM keluarga WHERE id_pegawai=$_SESSION[id_pegawai]");
-while ($k=mysqli_fetch_array($keluarga)){	
-$no++;
-        echo"<tbody>
-            <tr>
-                <td>$no</td>
-                <td>$k[nama_keluarga]</td>
-                <td>$k[hubungan_keluarga]</td>
-                <td>$k[no_hpkeluarga]</td>
-                <td><button class='btn btn-info' data-toggle='modal' data-target='#uieditkeluarga$k[id_keluarga]'><i class='fa fa fa-pencil'></i></button>
-                <a class='btn btn-info' href='hapus.php?aksi=hapuskeluarga&id_keluarga=$k[id_keluarga]&id_pegawai=$_SESSION[id_pegawai]' onclick=\"return confirm ('Apakah yakin ingin menghapus $k[nama_keluarga] ?')\" title='Hapus'><i class='fa fa-remove'></i></a>
-                </td>
-            </tr>
-        </tbody>
-        <div class='modal fade' id='uieditkeluarga$k[id_keluarga]' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-    <div class='modal-dialog'>
-        <div class='modal-content'>
-            <div class='modal-header'>
-    <h4 class='modal-title' id='H3'>Edit data $t[nama_pegawai]</h4>
-            </div>
-            <div class='modal-body'>
-                <form role='form' method='post' action='edit.php?aksi=proseseditkeluarga&id_keluarga=$k[id_keluarga]'>
-                                    <div class='form-group'>
-                <label>Nama Keluarga</label>
-                <input type='text' class='form-control' value='$k[nama_keluarga]' name='nama_keluarga'/><br>
-                <label>Hubungan Keluarga</label>
-                <input type='text' class='form-control'  value='$k[hubungan_keluarga]' name='hubungan_keluarga'/><br>
-                <label>Kontak Darurat/HP</label>
-                <input type='text' class='form-control'  value='$k[no_hpkeluarga]' name='no_hpkeluarga'/><br>
-                <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-
-                <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                <button type='submit' class='btn btn-primary'>Save </button>
-                </div>
-            </form>
-            <div class='modal-footer'>
-            <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-          
-          </div>
-            </div>
-        </div>
-    </div>
-                                 
-        ";
-}
-    echo"</table>
-    <div class='modal fade' id='uiModalkeluarga' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
-    <div class='modal-dialog'>
-        <div class='modal-content'>
-            <div class='modal-header'>
-    <h4 class='modal-title' id='H3'>Tambah Data $t[nama_pegawai]</h4>
-            </div>
-            <div class='modal-body'>
-                <form role='form' method='post' action='input.php?aksi=inputkeluarga'>
-                                    <div class='form-group'>
-                <label>Nama Keluarga</label>
-                <input type='text' class='form-control' name='nama_keluarga'/><br>
-                <label>Hubungan Keluarga</label>
-                <input type='text' class='form-control'  name='hubungan_keluarga'/><br>
-                <label>Kontak Darurat/HP</label>
-                <input type='text' class='form-control'  name='no_hpkeluarga'/><br>
-                <input type='hidden' class='form-control'  value='$_SESSION[id_pegawai]' name='id_pegawai'/><br>
-
-                <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-                <button type='submit' class='btn btn-primary'>Save </button>
-                </div>
-            </form>
-            <div class='modal-footer'>
-            <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
-          
-          </div>
-            </div>
-        </div>
-    </div>
-</div>
-        </div><!-- /.tab-pane -->
+        
 
       </div><!-- /.tab-content -->
 
